@@ -22,21 +22,21 @@ namespace BulkyWeb.Areas.Admin.Controllers
         public IActionResult Index()
         {
             List<Product> objProductList = _unitOfWork.Product.GetAll().ToList();
-            
+
             return View(objProductList);
         }
         public IActionResult Upsert(int? id)
         {
             ProductVM productVM = new()
             {
-                CategoryList= _unitOfWork.Category.GetAll().Select(u => new SelectListItem
+                CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem
                 {
                     Text = u.Name,
                     Value = u.Id.ToString()
                 }),
-                Product =new Product()
+                Product = new Product()
             };
-            if(id== null || id == 0)
+            if (id == null || id == 0)
             {
                 //Create
                 return View(productVM);
@@ -44,25 +44,26 @@ namespace BulkyWeb.Areas.Admin.Controllers
             else
             {
                 //update
-                productVM.Product=_unitOfWork.Product.Get(u=>u.Id==id);
+                productVM.Product = _unitOfWork.Product.Get(u => u.Id == id);
                 return View(productVM);
 
             }
 
         }
         [HttpPost]
-        public IActionResult Upsert(ProductVM productVM,IFormFile? file)
+        public IActionResult Upsert(ProductVM productVM, IFormFile? file)
         {
-           
+
 
             if (ModelState.IsValid)
             {
-                string wwwRootPath=_webHostEnvironment.WebRootPath;
-                if(file!=null)
+                string wwwRootPath = _webHostEnvironment.WebRootPath;
+                if (file != null)
                 {
-                    string fileName=Guid.NewGuid().ToString()+Path.GetExtension(file.FileName);
-                    string productPath=Path.Combine(wwwRootPath,@"images\product");
-                    using (var fileStream =new FileStream(Path.Combine(productPath, fileName),FileMode.Create))
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string productPath = Path.Combine(wwwRootPath, @"images\product");
+
+                    using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
                     {
                         file.CopyTo(fileStream);
                     }
@@ -81,13 +82,13 @@ namespace BulkyWeb.Areas.Admin.Controllers
                     Text = u.Name,
                     Value = u.Id.ToString()
                 });
-                
+                return View(productVM);
             }
 
-            return View(productVM);
+
 
         }
-       
+
 
         public IActionResult Delete(int? id)
         {
