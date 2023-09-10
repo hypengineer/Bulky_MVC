@@ -135,7 +135,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
 				var domain = "https://localhost:7287/";
 				var options = new SessionCreateOptions
 				{
-					SuccessUrl = domain+ $"customer/car/OrderConfirmation?id={ShoppingCartVM.OrderHeader.Id}",
+					SuccessUrl = domain+ $"customer/cart/OrderConfirmation?id={ShoppingCartVM.OrderHeader.Id}",
 					CancelUrl= domain+"customer/cart/index",
 					LineItems = new List<SessionLineItemOptions>(),
 					Mode = "payment",
@@ -186,7 +186,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
 
 				if (session.PaymentStatus.ToLower() == "paid")
 				{
-					_unitOfWork.OrderHeader.UpdateStripePaymentID(ShoppingCartVM.OrderHeader.Id, session.Id, session.PaymentIntentId);
+					_unitOfWork.OrderHeader.UpdateStripePaymentID(id, session.Id, session.PaymentIntentId);
 					_unitOfWork.OrderHeader.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
 					_unitOfWork.Save();
 				}
