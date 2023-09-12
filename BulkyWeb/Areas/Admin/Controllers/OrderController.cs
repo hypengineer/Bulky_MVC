@@ -191,7 +191,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
                 //this is an order by company
                 var service = new SessionService();
                 Session session = service.Get(orderHeader.SessionId);
-
+                
                 if (session.PaymentStatus.ToLower() == "paid")
                 {
                     _unitOfWork.OrderHeader.UpdateStripePaymentID(orderHeaderId, session.Id, session.PaymentIntentId);
