@@ -59,9 +59,25 @@ namespace BulkyWeb.Areas.Admin.Controllers
             return Json(new {data= objUserList });
         }
 
-        [HttpDelete]
-        public IActionResult Delete(int? id)
+        [HttpPost]
+        public IActionResult LockUnlock([FromBody]string id)
         {
+            var objFromDb = _db.ApplicationUsers.FirstOrDefault(u=> u.Id==id);
+            if(objFromDb == null)
+            {
+                return Json(new {success=false,message="Error while locking/Unlocking"});
+            }
+
+            if (objFromDb.LockoutEnd != null && objFromDb.LockoutEnd > DateTime.Now)
+            {
+                // user is currently locked nd we need to unlock them
+                objFromDb.LockoutEnd = DateTime.Now;
+            }
+            else
+            {
+                objFromDb.LockoutEnd= DateTime.Now.AddYears(1000);
+            }
+            _db.SaveChanges();
             
             return Json(new { success=true,message="Delete Successful"});
         }
